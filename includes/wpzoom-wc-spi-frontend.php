@@ -28,12 +28,30 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Frontend' ) ) {
 			if ( ! is_admin() ) {
 				
 				add_action( 'wp_enqueue_scripts', array( $this, 'load_frontend_scripts' ) );
-				add_action( 'woocommerce_before_shop_loop_item_title', array( $this, 'output_secondary_product_thumbnail' ), 15 );
+				// Skip classic loop injection when a composite product-card renderer is active
+				$disable_classic_injection = false;
+				if (class_exists('Inspiro_WC_Product_Card') && has_action('woocommerce_after_shop_loop_item', array('Inspiro_WC_Product_Card', 'render_card_contents_in_order'))) {
+					$disable_classic_injection = true;
+				}
+				$disable_classic_injection = apply_filters('wpzoom_wc_spi_disable_classic_injection', $disable_classic_injection);
+				if (!$disable_classic_injection) {
+					add_action('woocommerce_before_shop_loop_item_title', array($this, 'output_secondary_product_thumbnail'), 15);
+				}
+
+				// Late safeguard: if composite renderer attaches later at 'wp', remove our classic injection to avoid duplicates
+				add_action('wp', array($this, 'maybe_disable_classic_injection'), 20);
 				add_filter( 'post_class', array( $this, 'set_product_post_class' ), 21, 3 );
 
 				add_filter( 'wpzoom_wc_spi_secondary_product_thumbnail', array( $this, 'add_image_wrapper') );
 			}
 
+		}
+
+		public function maybe_disable_classic_injection()
+		{
+			if (class_exists('Inspiro_WC_Product_Card') && has_action('woocommerce_after_shop_loop_item', array('Inspiro_WC_Product_Card', 'render_card_contents_in_order'))) {
+				remove_action('woocommerce_before_shop_loop_item_title', array($this, 'output_secondary_product_thumbnail'), 15);
+			}
 		}
 
 		/**
