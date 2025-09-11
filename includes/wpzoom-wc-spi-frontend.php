@@ -28,13 +28,9 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Frontend' ) ) {
 			if ( ! is_admin() ) {
 				
 				add_action( 'wp_enqueue_scripts', array( $this, 'load_frontend_scripts' ) );
-				// Conditionally hook secondary image depending on Inspiro composite renderer
-				$use_composite_renderer = (bool) apply_filters('inspiro_wc_use_composite_renderer', (bool) get_theme_mod('wc_shop_use_composite_renderer', false));
-				if ($use_composite_renderer || has_action('inspiro_wc_inside_thumbnail_link')) {
-					add_action('inspiro_wc_inside_thumbnail_link', array($this, 'output_secondary_product_thumbnail'), 15);
-				} else {
-					add_action('woocommerce_before_shop_loop_item_title', array($this, 'output_secondary_product_thumbnail'), 15);
-				}
+				// Register both hooks; gate at runtime inside output method
+				add_action('woocommerce_before_shop_loop_item_title', array($this, 'output_secondary_product_thumbnail'), 15);
+				add_action('inspiro_wc_inside_thumbnail_link', array($this, 'output_secondary_product_thumbnail'), 15);
 				add_filter( 'post_class', array( $this, 'set_product_post_class' ), 21, 3 );
 
 				add_filter( 'wpzoom_wc_spi_secondary_product_thumbnail', array( $this, 'add_image_wrapper') );
@@ -81,6 +77,15 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Frontend' ) ) {
 		}
 
 		public function output_secondary_product_thumbnail() {
+			// Gate at runtime so both hooks can be registered safely (works in Customizer too)
+			$use_composite = (bool) apply_filters('inspiro_wc_use_composite_renderer', (bool) get_theme_mod('wc_shop_use_composite_renderer', false));
+			$inside_inspiro = function_exists('doing_action') && doing_action('inspiro_wc_inside_thumbnail_link');
+
+			// Only render in the matching context to avoid duplicate output
+			if (($use_composite && !$inside_inspiro) || (!$use_composite && $inside_inspiro)) {
+				return;
+			}
+
 			echo $this->add_secondary_product_thumbnail();
 		}
 
