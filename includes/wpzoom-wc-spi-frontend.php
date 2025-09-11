@@ -28,7 +28,13 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Frontend' ) ) {
 			if ( ! is_admin() ) {
 				
 				add_action( 'wp_enqueue_scripts', array( $this, 'load_frontend_scripts' ) );
-				add_action( 'woocommerce_before_shop_loop_item_title', array( $this, 'output_secondary_product_thumbnail' ), 15 );
+				// Conditionally hook secondary image depending on Inspiro composite renderer
+				$use_composite_renderer = (bool) apply_filters('inspiro_wc_use_composite_renderer', (bool) get_theme_mod('wc_shop_use_composite_renderer', false));
+				if ($use_composite_renderer || has_action('inspiro_wc_inside_thumbnail_link')) {
+					add_action('inspiro_wc_inside_thumbnail_link', array($this, 'output_secondary_product_thumbnail'), 15);
+				} else {
+					add_action('woocommerce_before_shop_loop_item_title', array($this, 'output_secondary_product_thumbnail'), 15);
+				}
 				add_filter( 'post_class', array( $this, 'set_product_post_class' ), 21, 3 );
 
 				add_filter( 'wpzoom_wc_spi_secondary_product_thumbnail', array( $this, 'add_image_wrapper') );
@@ -84,6 +90,11 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Frontend' ) ) {
 
 			//Check if the theme is a block theme
 			$is_theme_block = wp_is_block_theme();
+
+			// When running inside Inspiro's thumbnail-link hook, avoid adding an <a> wrapper
+			if (function_exists('doing_action') && doing_action('inspiro_wc_inside_thumbnail_link')) {
+				$is_theme_block = false;
+			}
 
 			if( $is_theme_block ) {
 				$image_html = '<a href="' . esc_url( $product->get_permalink() ) . '">' . $image_html . '</a>';
