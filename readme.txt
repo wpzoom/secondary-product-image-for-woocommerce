@@ -69,6 +69,8 @@ This section describes how to install the plugin and get it working.
 
 = 1.1.0 =
 * New settings screen under WooCommerce > Settings > Products > Secondary Image
+* New live preview on the settings screen, so you can try every option before saving
+* New Settings shortcut in the Plugins list
 * New transition effects: fade, slide and zoom, with a configurable speed
 * New hover mode that rotates through all gallery images automatically
 * New hover mode with previous / next arrows

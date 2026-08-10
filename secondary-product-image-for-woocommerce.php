@@ -82,6 +82,7 @@ class WPZOOM_WC_Secondary_Product_Image {
 		add_action( 'admin_init', array( $this, 'metabox' ) );
 
 		add_action( 'init', array( $this, 'i18n' ) );
+		add_filter( 'plugin_action_links_' . WPZOOM_WC_SPI_PLUGIN_BASE, array( $this, 'plugin_action_links' ) );
 		add_action( 'before_woocommerce_init', array( $this, 'declare_woocommerce_compatibility' ) );
 		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ) );
 		add_action( 'plugins_loaded', array( $this, 'frontend' ) );
@@ -108,6 +109,34 @@ class WPZOOM_WC_Secondary_Product_Image {
 		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', WPZOOM_WC_SPI__FILE__, true );
 		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', WPZOOM_WC_SPI__FILE__, true );
 
+	}
+
+	/**
+	 * Add a Settings link to the plugin row.
+	 *
+	 * The settings live inside WooCommerce, which is not an obvious place to look,
+	 * so the shortcut is worth having.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @param array $links
+	 * @return array
+	 */
+	public function plugin_action_links( $links ) {
+
+		if ( ! $this->is_woocommerce_activated() ) {
+			return $links;
+		}
+
+		$settings = sprintf(
+			'<a href="%1$s">%2$s</a>',
+			esc_url( admin_url( 'admin.php?page=wc-settings&tab=products&section=wpzoom-secondary-image' ) ),
+			esc_html__( 'Settings', 'secondary-product-image-for-woocommerce' )
+		);
+
+		array_unshift( $links, $settings );
+
+		return $links;
 	}
 
 	/**

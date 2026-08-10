@@ -1,0 +1,96 @@
+/**
+ * Live preview panel on the settings screen.
+ *
+ * The card itself relies on the front-end stylesheet, so the preview cannot
+ * drift from what the shop renders. Only the panel around it is styled here.
+ */
+
+/* Two columns: settings on the left, preview sticking to the right. */
+.wpzoom-wc-spi-settings #mainform {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 340px;
+	column-gap: 32px;
+	align-items: start;
+}
+
+.wpzoom-wc-spi-settings #mainform > * {
+	grid-column: 1;
+	min-width: 0;
+}
+
+.wpzoom-wc-spi-settings #mainform > .wpzoom-wc-spi-preview-panel {
+	grid-column: 2;
+	grid-row: 1 / span 100;
+	position: sticky;
+	top: 46px;
+}
+
+.wpzoom-wc-spi-preview-panel h3 {
+	margin: 0 0 10px;
+}
+
+.wpzoom-wc-spi-preview-panel .description {
+	max-width: 300px;
+	margin-top: 10px;
+}
+
+.wpzoom-wc-spi-preview {
+	display: inline-block;
+	padding: 20px;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	background: #fff repeating-conic-gradient(#f6f7f7 0% 25%, #fff 0% 50%) 0 0 / 16px 16px;
+}
+
+.wpzoom-wc-spi-preview-card {
+	width: 260px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	background: #fff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.wpzoom-wc-spi-preview-primary {
+	display: block;
+	width: 100%;
+	height: 195px;
+	margin: 0;
+	object-fit: cover;
+}
+
+.wpzoom-wc-spi-preview-meta {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 12px;
+}
+
+.wpzoom-wc-spi-preview-title {
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+.wpzoom-wc-spi-preview-price {
+	color: #50575e;
+}
+
+.wpzoom-wc-spi-preview-note {
+	margin: 12px 0 0;
+	max-width: 260px;
+	color: #50575e;
+	font-style: italic;
+}
+
+/* Not enough room for a side column: fall back to stacking. */
+@media screen and (max-width: 1300px) {
+
+	.wpzoom-wc-spi-settings #mainform {
+		display: block;
+	}
+
+	.wpzoom-wc-spi-settings #mainform > .wpzoom-wc-spi-preview-panel {
+		position: static;
+		margin-bottom: 24px;
+	}
+}

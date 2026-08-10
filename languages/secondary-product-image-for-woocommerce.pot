@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-10T11:51:33+00:00\n"
+"POT-Creation-Date: 2026-08-10T12:18:46+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: secondary-product-image-for-woocommerce\n"
@@ -40,23 +40,28 @@ msgid "https://www.wpzoom.com/"
 msgstr ""
 
 #: includes/wpzoom-wc-spi-frontend.php:130
+#: includes/wpzoom-wc-spi-settings.php:236
 msgid "Previous image"
 msgstr ""
 
 #: includes/wpzoom-wc-spi-frontend.php:131
+#: includes/wpzoom-wc-spi-settings.php:237
 msgid "Next image"
 msgstr ""
 
 #: includes/wpzoom-wc-spi-frontend.php:132
+#: includes/wpzoom-wc-spi-settings.php:238
 msgid "Open images in a lightbox"
 msgstr ""
 
 #: includes/wpzoom-wc-spi-frontend.php:133
+#: includes/wpzoom-wc-spi-settings.php:239
 msgid "Close"
 msgstr ""
 
 #. translators: 1: current image number 2: total number of images
 #: includes/wpzoom-wc-spi-frontend.php:135
+#: includes/wpzoom-wc-spi-settings.php:241
 #, php-format
 msgid "Image %1$s of %2$s"
 msgstr ""
@@ -83,7 +88,7 @@ msgid "Remove %s"
 msgstr ""
 
 #: includes/wpzoom-wc-spi-metabox.php:486
-#: includes/wpzoom-wc-spi-settings.php:161
+#: includes/wpzoom-wc-spi-settings.php:342
 msgid "Secondary Product Image"
 msgstr ""
 
@@ -91,164 +96,180 @@ msgstr ""
 msgid "Add a second Featured Image, which will appear when hovering over the product image."
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:138
+#: includes/wpzoom-wc-spi-settings.php:273
+msgid "Nothing is revealed on hover with these settings."
+msgstr ""
+
+#: includes/wpzoom-wc-spi-settings.php:304
+msgid "Live preview"
+msgstr ""
+
+#: includes/wpzoom-wc-spi-settings.php:307
+msgid "Hover the image to try your settings. Changes are previewed straight away, but still need saving."
+msgstr ""
+
+#: includes/wpzoom-wc-spi-settings.php:319
 msgid "Secondary Image"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:163
+#: includes/wpzoom-wc-spi-settings.php:344
 msgid "Choose how the secondary image behaves when a shopper hovers a product in your listings."
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:168
+#: includes/wpzoom-wc-spi-settings.php:349
 msgid "On hover show"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:173
+#: includes/wpzoom-wc-spi-settings.php:354
 msgid "Rotating and sliding use the product gallery. Extra images are only downloaded once a product is hovered."
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:175
+#: includes/wpzoom-wc-spi-settings.php:356
 msgid "A single secondary image"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:176
+#: includes/wpzoom-wc-spi-settings.php:357
 msgid "All gallery images, rotating automatically"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:177
+#: includes/wpzoom-wc-spi-settings.php:358
 msgid "All gallery images, with previous / next arrows"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:182
+#: includes/wpzoom-wc-spi-settings.php:363
 msgid "Transition effect"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:188
+#: includes/wpzoom-wc-spi-settings.php:369
 msgid "Fade"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:189
+#: includes/wpzoom-wc-spi-settings.php:370
 msgid "Slide"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:190
+#: includes/wpzoom-wc-spi-settings.php:371
 msgid "Zoom"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:195
+#: includes/wpzoom-wc-spi-settings.php:376
 msgid "Transition speed"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:199
+#: includes/wpzoom-wc-spi-settings.php:380
 msgid "milliseconds"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:204
+#: includes/wpzoom-wc-spi-settings.php:385
 msgid "Rotation interval"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:208
+#: includes/wpzoom-wc-spi-settings.php:389
 msgid "milliseconds each image stays visible while rotating"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:213
+#: includes/wpzoom-wc-spi-settings.php:394
 msgid "Maximum images per product"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:217
+#: includes/wpzoom-wc-spi-settings.php:398
 msgid "Keeps large galleries from slowing down your shop pages."
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:223
+#: includes/wpzoom-wc-spi-settings.php:404
 msgid "When no secondary image is set"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:229
+#: includes/wpzoom-wc-spi-settings.php:410
 msgid "Use the first gallery image"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:230
+#: includes/wpzoom-wc-spi-settings.php:411
 msgid "Use the last gallery image"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:231
+#: includes/wpzoom-wc-spi-settings.php:412
 msgid "Show nothing"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:236
+#: includes/wpzoom-wc-spi-settings.php:417
 msgid "Lightbox"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:240
+#: includes/wpzoom-wc-spi-settings.php:421
 msgid "Add a button that opens the images in a lightbox"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:244
+#: includes/wpzoom-wc-spi-settings.php:425
 msgid "Lightbox button position"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:249
+#: includes/wpzoom-wc-spi-settings.php:430
 msgid "Where the button sits on the product image. Move it off the corners if your theme shows a sale badge there."
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:251
+#: includes/wpzoom-wc-spi-settings.php:432
 msgid "Centre"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:252
+#: includes/wpzoom-wc-spi-settings.php:433
 msgid "Top left"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:253
+#: includes/wpzoom-wc-spi-settings.php:434
 msgid "Top right"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:254
+#: includes/wpzoom-wc-spi-settings.php:435
 msgid "Bottom left"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:255
+#: includes/wpzoom-wc-spi-settings.php:436
 msgid "Bottom right"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:260
+#: includes/wpzoom-wc-spi-settings.php:441
 msgid "Touch devices"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:264
+#: includes/wpzoom-wc-spi-settings.php:445
 msgid "Also show the secondary image on phones and tablets"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-settings.php:265
+#: includes/wpzoom-wc-spi-settings.php:446
 msgid "Off by default, because a tap on a touch screen is meant to open the product."
 msgstr ""
 
+#: secondary-product-image-for-woocommerce.php:134
+msgid "Settings"
+msgstr ""
+
 #. translators: 1: Plugin name 2: WooCommerce
-#: secondary-product-image-for-woocommerce.php:189
+#: secondary-product-image-for-woocommerce.php:218
 #, php-format
 msgid "\"%1$s\" requires \"%2$s\" to be activated."
 msgstr ""
 
-#: secondary-product-image-for-woocommerce.php:190
-#: secondary-product-image-for-woocommerce.php:202
+#: secondary-product-image-for-woocommerce.php:219
+#: secondary-product-image-for-woocommerce.php:231
 msgid "WooCommerce Secondary Product Image"
 msgstr ""
 
-#: secondary-product-image-for-woocommerce.php:191
-#: secondary-product-image-for-woocommerce.php:203
+#: secondary-product-image-for-woocommerce.php:220
+#: secondary-product-image-for-woocommerce.php:232
 msgid "WooCommerce"
 msgstr ""
 
-#: secondary-product-image-for-woocommerce.php:194
+#: secondary-product-image-for-woocommerce.php:223
 msgid "Activate WooCommerce"
 msgstr ""
 
 #. translators: 1: Plugin name 2: WooCommerce
-#: secondary-product-image-for-woocommerce.php:201
+#: secondary-product-image-for-woocommerce.php:230
 #, php-format
 msgid "\"%1$s\" requires \"%2$s\" to be installed."
 msgstr ""
 
-#: secondary-product-image-for-woocommerce.php:206
+#: secondary-product-image-for-woocommerce.php:235
 msgid "Install WooCommerce"
 msgstr ""
