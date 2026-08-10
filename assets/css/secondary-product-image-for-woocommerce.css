@@ -2,82 +2,340 @@
  * Secondary Product Image for WooCommerce
  *
  * The container stays hidden until the script confirms a hover-capable pointer,
- * so touch devices never download the extra image.
+ * so touch devices never download the extra images.
  */
-.wpzoom-secondary-image-container {
+.wpzoom-secondary-image-container,
+.wpzoom-wc-spi-controls {
 	display: none;
 }
 
-@media (hover: hover) and (pointer: fine) {
+.wpzoom-wc-spi-ready .wpzoom-secondary-image-container,
+.wpzoom-wc-spi-ready .wpzoom-wc-spi-controls {
+	display: block;
+}
 
-	.wpzoom-wc-spi-has-enabled {
-		position: relative;
-	}
+/* Controls stay out of the way until the script has moved them into place. */
+.wpzoom-wc-spi-controls[hidden] {
+	display: none !important;
+}
 
-	.wpzoom-secondary-image-container {
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		line-height: 0;
-		/* Let clicks fall through to the product link underneath. */
-		pointer-events: none;
-	}
+.wpzoom-wc-spi-has-enabled {
+	position: relative;
+}
 
+.wpzoom-secondary-image-container,
+.wpzoom-wc-spi-controls {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	line-height: 0;
+	/* Let clicks fall through to the product link underneath. */
+	pointer-events: none;
+}
+
+/*
+ * No z-index on the image container on purpose. It paints above the product
+ * image simply by coming later in the DOM, while sale badges and similar
+ * overlays, which carry their own positive z-index, stay on top of it.
+ *
+ * The controls are the exception: they have to win the hit test against themes
+ * that put the product image in its own stacking context, or a click on an
+ * arrow would fall through to the product link underneath.
+ */
+.wpzoom-wc-spi-controls {
+	z-index: 3;
+}
+
+/* Unless the image carries its own link, as it does on some block themes. */
+.wpzoom-secondary-image-container:has(> a) {
+	pointer-events: auto;
+}
+
+.wpzoom-secondary-image-container a {
+	display: block;
+}
+
+/*
+ * The container is measured against the primary image by the script, so the
+ * overlay fills it exactly instead of falling back to its natural ratio, which
+ * would spill over the title and price on themes that crop thumbnails.
+ */
+.wpzoom-wc-spi-secondary-img,
+.wpzoom-wc-spi-secondary-img.lazyloaded {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	object-fit: cover;
+	opacity: 0;
+	visibility: hidden;
+	transition:
+		opacity var(--wpzoom-wc-spi-duration, 450ms) cubic-bezier(0.23, 1, 0.32, 1),
+		transform var(--wpzoom-wc-spi-duration, 450ms) cubic-bezier(0.23, 1, 0.32, 1),
+		visibility var(--wpzoom-wc-spi-duration, 450ms);
+}
+
+/*
+ * `!important` is deliberate: several themes fade product images on hover
+ * (`.product:hover img { opacity: .5 }`) and would otherwise wash out the
+ * secondary image too.
+ */
+.wpzoom-wc-spi-has-enabled:hover .wpzoom-wc-spi-secondary-img.is-active,
+.wpzoom-wc-spi-has-enabled:focus-within .wpzoom-wc-spi-secondary-img.is-active,
+.wpzoom-wc-spi-active .wpzoom-wc-spi-secondary-img.is-active,
+.wpzoom-wc-spi-block-image:hover .wpzoom-wc-spi-secondary-img.is-active,
+.wpzoom-wc-spi-block-image:focus-within .wpzoom-wc-spi-secondary-img.is-active {
+	opacity: 1 !important;
+	visibility: visible;
+	transform: none;
+}
+
+/* Effects ---------------------------------------------------------------- */
+
+.wpzoom-wc-spi-effect-slide .wpzoom-wc-spi-secondary-img {
+	transform: translateX(15%);
+}
+
+.wpzoom-wc-spi-effect-zoom .wpzoom-wc-spi-secondary-img {
+	transform: scale(1.08);
+}
+
+/* Slider and lightbox controls ------------------------------------------- */
+
+.wpzoom-wc-spi-nav {
+	position: absolute;
+	top: 50%;
+	width: 32px;
+	height: 32px;
+	margin: 0;
+	padding: 0;
+	transform: translateY(-50%);
+	border: 0;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.9);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+	color: #111;
+	cursor: pointer;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: auto;
 	/*
-	 * No z-index on purpose. The container paints above the product image simply
-	 * by coming later in the DOM, while sale badges and similar overlays, which
-	 * carry their own positive z-index, stay on top of it.
+	 * Hiding waits for the fade to finish, showing is immediate. A button that
+	 * is still mid-transition to `visible` cannot take focus, which would break
+	 * returning focus after the lightbox closes.
 	 */
+	transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+}
 
-	/* Unless the image carries its own link, as it does on some block themes. */
-	.wpzoom-secondary-image-container:has(> a) {
-		pointer-events: auto;
-	}
+.wpzoom-wc-spi-has-enabled:hover .wpzoom-wc-spi-nav,
+.wpzoom-wc-spi-has-enabled:focus-within .wpzoom-wc-spi-nav,
+.wpzoom-wc-spi-active .wpzoom-wc-spi-nav,
+.wpzoom-wc-spi-block-image:hover .wpzoom-wc-spi-nav,
+.wpzoom-wc-spi-block-image:focus-within .wpzoom-wc-spi-nav {
+	opacity: 1;
+	visibility: visible;
+	transition: opacity 0.2s ease, visibility 0s linear;
+}
 
-	.wpzoom-secondary-image-container a {
-		display: block;
-	}
+.wpzoom-wc-spi-nav:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+}
 
-	.wpzoom-wc-spi-ready .wpzoom-secondary-image-container {
-		display: block;
-	}
+.wpzoom-wc-spi-nav::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 8px;
+	height: 8px;
+	border-top: 2px solid currentColor;
+	border-right: 2px solid currentColor;
+}
 
-	/*
-	 * The container is measured against the primary image by the script, so the
-	 * overlay fills it exactly instead of falling back to its natural ratio,
-	 * which would spill over the title and price on themes that crop thumbnails.
-	 */
-	.wpzoom-wc-spi-secondary-img,
-	.wpzoom-wc-spi-secondary-img.lazyloaded {
-		display: block;
-		width: 100%;
-		max-width: 100%;
-		height: 100%;
-		margin: 0;
-		padding: 0;
-		object-fit: cover;
-		opacity: 0;
-		visibility: hidden;
-		transition: opacity 0.45s cubic-bezier(0.23, 1, 0.32, 1), visibility 0.45s;
-	}
+.wpzoom-wc-spi-prev {
+	left: 8px;
+}
 
-	/*
-	 * `!important` is deliberate: several themes fade product images on hover
-	 * (`.product:hover img { opacity: .5 }`) and would otherwise wash out the
-	 * secondary image too.
-	 */
-	.wpzoom-wc-spi-has-enabled:hover .wpzoom-wc-spi-secondary-img,
-	.wpzoom-wc-spi-has-enabled:focus-within .wpzoom-wc-spi-secondary-img,
-	.wpzoom-wc-spi-block-image:hover .wpzoom-wc-spi-secondary-img,
-	.wpzoom-wc-spi-block-image:focus-within .wpzoom-wc-spi-secondary-img {
-		opacity: 1 !important;
-		visibility: visible;
-	}
+.wpzoom-wc-spi-prev::before {
+	transform: translate(-30%, -50%) rotate(-135deg);
+}
+
+.wpzoom-wc-spi-next {
+	right: 8px;
+}
+
+.wpzoom-wc-spi-next::before {
+	transform: translate(-70%, -50%) rotate(45deg);
+}
+
+/* Bottom right, out of the way of sale badges, which sit at the top. */
+.wpzoom-wc-spi-expand {
+	top: auto;
+	bottom: 8px;
+	right: 8px;
+	transform: none;
+}
+
+.wpzoom-wc-spi-expand::before {
+	width: 11px;
+	height: 11px;
+	border: 2px solid currentColor;
+	border-radius: 50%;
+	transform: translate(-60%, -60%);
+}
+
+.wpzoom-wc-spi-expand::after {
+	content: "";
+	position: absolute;
+	top: 60%;
+	left: 60%;
+	width: 6px;
+	height: 2px;
+	background: currentColor;
+	transform: rotate(45deg);
+}
+
+/* Lightbox --------------------------------------------------------------- */
+
+.wpzoom-wc-spi-lightbox-open {
+	overflow: hidden;
+}
+
+.wpzoom-wc-spi-lightbox {
+	position: fixed;
+	inset: 0;
+	z-index: 999999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.wpzoom-wc-spi-lightbox[hidden] {
+	display: none;
+}
+
+.wpzoom-wc-spi-lightbox-backdrop {
+	position: absolute;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.85);
+}
+
+.wpzoom-wc-spi-lightbox-frame {
+	position: relative;
+	max-width: 90vw;
+	max-height: 90vh;
+	text-align: center;
+}
+
+.wpzoom-wc-spi-lightbox-image {
+	display: block;
+	max-width: 90vw;
+	max-height: 80vh;
+	width: auto;
+	height: auto;
+	margin: 0 auto;
+}
+
+.wpzoom-wc-spi-lightbox-counter {
+	margin: 12px 0 0;
+	color: #fff;
+	font-size: 14px;
+	line-height: 1.4;
+}
+
+.wpzoom-wc-spi-lightbox button {
+	position: absolute;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.15);
+	color: #fff;
+	cursor: pointer;
+}
+
+.wpzoom-wc-spi-lightbox button:hover {
+	background: rgba(255, 255, 255, 0.3);
+}
+
+.wpzoom-wc-spi-lightbox button:focus-visible {
+	outline: 2px solid #fff;
+	outline-offset: 2px;
+}
+
+.wpzoom-wc-spi-lightbox button[hidden] {
+	display: none;
+}
+
+.wpzoom-wc-spi-lightbox-close {
+	top: 20px;
+	right: 20px;
+}
+
+.wpzoom-wc-spi-lightbox-close::before,
+.wpzoom-wc-spi-lightbox-close::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 18px;
+	height: 2px;
+	background: currentColor;
+}
+
+.wpzoom-wc-spi-lightbox-close::before {
+	transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.wpzoom-wc-spi-lightbox-close::after {
+	transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.wpzoom-wc-spi-lightbox-prev,
+.wpzoom-wc-spi-lightbox-next {
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.wpzoom-wc-spi-lightbox-prev {
+	left: 20px;
+}
+
+.wpzoom-wc-spi-lightbox-next {
+	right: 20px;
+}
+
+.wpzoom-wc-spi-lightbox-prev::before,
+.wpzoom-wc-spi-lightbox-next::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 12px;
+	height: 12px;
+	border-top: 2px solid currentColor;
+	border-right: 2px solid currentColor;
+}
+
+.wpzoom-wc-spi-lightbox-prev::before {
+	transform: translate(-30%, -50%) rotate(-135deg);
+}
+
+.wpzoom-wc-spi-lightbox-next::before {
+	transform: translate(-70%, -50%) rotate(45deg);
 }
 
 @media (prefers-reduced-motion: reduce) {
 	.wpzoom-wc-spi-secondary-img {
 		transition-duration: 0.01ms;
+		transform: none;
 	}
 }

@@ -70,6 +70,34 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Frontend' ) ) {
 		}
 
 		/**
+		 * Read a plugin option, falling back to the defaults when the settings
+		 * class is unavailable.
+		 *
+		 * @since 1.1.0
+		 * @param string $key
+		 * @return mixed
+		 */
+		protected function option( $key ) {
+
+			if ( class_exists( 'WPZOOM_WC_SPI_Settings' ) ) {
+				return WPZOOM_WC_SPI_Settings::get( $key );
+			}
+
+			$defaults = array(
+				'effect'     => 'fade',
+				'duration'   => 450,
+				'mode'       => 'single',
+				'interval'   => 1200,
+				'max_images' => 5,
+				'fallback'   => 'first',
+				'lightbox'   => 'no',
+				'touch'      => 'no',
+			);
+
+			return isset( $defaults[ $key ] ) ? $defaults[ $key ] : null;
+		}
+
+		/**
 		 * Enqueue WCSPT front-end styles and scripts.
 		 */
 		public function load_frontend_scripts() {
@@ -92,6 +120,22 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Frontend' ) ) {
 				WPZOOM_WC_SPI_VER,
 				true
 			);
+
+			wp_localize_script(
+				'wpzoom-wc-spi-script',
+				'wpzoomWcSpi',
+				array(
+					'touch' => $this->option( 'touch' ),
+					'i18n'  => array(
+						'previous' => esc_html__( 'Previous image', 'secondary-product-image-for-woocommerce' ),
+						'next'     => esc_html__( 'Next image', 'secondary-product-image-for-woocommerce' ),
+						'expand'   => esc_html__( 'Open images in a lightbox', 'secondary-product-image-for-woocommerce' ),
+						'close'    => esc_html__( 'Close', 'secondary-product-image-for-woocommerce' ),
+						/* translators: 1: current image number 2: total number of images */
+						'counter'  => esc_html__( 'Image %1$s of %2$s', 'secondary-product-image-for-woocommerce' ),
+					),
+				)
+			);
 		}
 
 		public function output_secondary_product_thumbnail() {
@@ -111,7 +155,29 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Frontend' ) ) {
 				$image_html = '<a href="' . esc_url( $product->get_permalink() ) . '">' . $image_html . '</a>';
 			}
 
-			return '<div class="wpzoom-secondary-image-container">' . $image_html . '</div>';
+			return sprintf(
+				'<div class="wpzoom-secondary-image-container %1$s"%2$s>%3$s</div>',
+				esc_attr( 'wpzoom-wc-spi-effect-' . $this->option( 'effect' ) ),
+				$this->container_attributes(),
+				$image_html
+			);
+		}
+
+		/**
+		 * Data attributes the script reads off the container.
+		 *
+		 * @since 1.1.0
+		 * @return string
+		 */
+		protected function container_attributes() {
+
+			return sprintf(
+				' data-mode="%1$s" data-interval="%2$d" data-lightbox="%3$s" style="--wpzoom-wc-spi-duration:%4$dms"',
+				esc_attr( $this->option( 'mode' ) ),
+				absint( $this->option( 'interval' ) ),
+				'yes' === $this->option( 'lightbox' ) ? '1' : '0',
+				absint( $this->option( 'duration' ) )
+			);
 		}
 
 		/*
@@ -138,15 +204,15 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Frontend' ) ) {
 
 			$image_size = apply_filters( 'single_product_archive_thumbnail_size', $size );
 
-			$secondary_img_id = $this->get_secondary_image_id( $product );
+			$image_ids = $this->get_secondary_image_ids( $product );
 
-			if ( ! $secondary_img_id ) {
+			if ( ! $image_ids ) {
 				return '';
 			}
 
-			$image_html = $this->get_image_html( $secondary_img_id, $image_size );
+			$image_html = $this->get_images_html( $image_ids, $image_size );
 
-			return apply_filters( 'wpzoom_wc_spi_secondary_product_thumbnail', $image_html, $secondary_img_id, $image_size, $product );
+			return apply_filters( 'wpzoom_wc_spi_secondary_product_thumbnail', $image_html, reset( $image_ids ), $image_size, $product );
 		}
 
 		/**
@@ -186,18 +252,20 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Frontend' ) ) {
 				return $block_content;
 			}
 
-			$secondary_img_id = $this->get_secondary_image_id( $product );
+			$image_ids = $this->get_secondary_image_ids( $product );
 
-			if ( ! $secondary_img_id ) {
+			if ( ! $image_ids ) {
 				return $block_content;
 			}
+
+			$secondary_img_id = reset( $image_ids );
 
 			// Match the size the block itself renders, so both images stay equally sharp.
 			$sizing     = isset( $block['attrs']['imageSizing'] ) ? $block['attrs']['imageSizing'] : 'single';
 			$image_size = 'thumbnail' === $sizing ? 'woocommerce_thumbnail' : 'woocommerce_single';
 
 			$image_size = apply_filters( 'single_product_archive_thumbnail_size', $image_size );
-			$image_html = $this->get_image_html( $secondary_img_id, $image_size );
+			$image_html = $this->get_images_html( $image_ids, $image_size );
 
 			// Blocks render outside the loop, so point the global at this product
 			// before handing off to filters that expect it.
@@ -229,7 +297,97 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Frontend' ) ) {
 			$classes = 'attachment-' . $image_size . ' wpzoom-wc-spi-secondary-img wpzoom-wc-spi-transition';
 			$classes = apply_filters( 'wpzoom_wc_spi_image_class', $classes, $attachment_id, $image_size );
 
-			return wp_get_attachment_image( $attachment_id, $image_size, false, array( 'class' => $classes ) );
+			return wp_get_attachment_image(
+				$attachment_id,
+				$image_size,
+				false,
+				array(
+					'class'               => $classes . ' is-active',
+					'data-wpzoom-full'    => wp_get_attachment_image_url( $attachment_id, 'large' ),
+				)
+			);
+		}
+
+		/**
+		 * Markup for every image that follows the first one.
+		 *
+		 * The source is held back in data attributes so a shop page never pays for
+		 * gallery images the visitor may not look at. The script fills them in the
+		 * first time the product is hovered.
+		 *
+		 * @since 1.1.0
+		 * @param int    $attachment_id
+		 * @param string $image_size
+		 * @return string
+		 */
+		public function get_deferred_image_html( $attachment_id, $image_size ) {
+
+			$image = wp_get_attachment_image_src( $attachment_id, $image_size );
+
+			if ( ! $image ) {
+				return '';
+			}
+
+			$classes = 'attachment-' . $image_size . ' wpzoom-wc-spi-secondary-img wpzoom-wc-spi-transition';
+			$classes = apply_filters( 'wpzoom_wc_spi_image_class', $classes, $attachment_id, $image_size );
+
+			$srcset = wp_get_attachment_image_srcset( $attachment_id, $image_size );
+			$sizes  = wp_get_attachment_image_sizes( $attachment_id, $image_size );
+
+			return sprintf(
+				'<img class="%1$s" alt="%2$s" width="%3$d" height="%4$d" decoding="async" data-wpzoom-src="%5$s"%6$s%7$s data-wpzoom-full="%8$s" />',
+				esc_attr( $classes ),
+				esc_attr( (string) get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ) ),
+				absint( $image[1] ),
+				absint( $image[2] ),
+				esc_url( $image[0] ),
+				$srcset ? ' data-wpzoom-srcset="' . esc_attr( $srcset ) . '"' : '',
+				$sizes ? ' sizes="' . esc_attr( $sizes ) . '"' : '',
+				esc_url( (string) wp_get_attachment_image_url( $attachment_id, 'large' ) )
+			);
+		}
+
+		/**
+		 * Build the images, plus the arrows and lightbox button when enabled.
+		 *
+		 * @since 1.1.0
+		 * @param array  $ids        Attachment IDs, first one visible on hover.
+		 * @param string $image_size
+		 * @return string
+		 */
+		public function get_images_html( $ids, $image_size ) {
+
+			if ( empty( $ids ) ) {
+				return '';
+			}
+
+			$html = '';
+
+			foreach ( array_values( $ids ) as $index => $id ) {
+				$html .= 0 === $index
+					? $this->get_image_html( $id, $image_size )
+					: $this->get_deferred_image_html( $id, $image_size );
+			}
+
+			$controls = '';
+			$mode     = $this->option( 'mode' );
+
+			if ( 'slider' === $mode && count( $ids ) > 1 ) {
+				$controls .= '<button type="button" class="wpzoom-wc-spi-nav wpzoom-wc-spi-prev" data-wpzoom-action="prev"></button>';
+				$controls .= '<button type="button" class="wpzoom-wc-spi-nav wpzoom-wc-spi-next" data-wpzoom-action="next"></button>';
+			}
+
+			if ( 'yes' === $this->option( 'lightbox' ) ) {
+				$controls .= '<button type="button" class="wpzoom-wc-spi-nav wpzoom-wc-spi-expand" data-wpzoom-action="lightbox"></button>';
+			}
+
+			if ( $controls ) {
+				// The script moves this out of the product link before it is usable,
+				// so the buttons are never nested inside an anchor.
+				$html .= '<div class="wpzoom-wc-spi-controls" hidden>' . $controls . '</div>';
+			}
+
+			return $html;
 		}
 
 		/**
@@ -244,23 +402,80 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Frontend' ) ) {
 		 */
 		public function get_secondary_image_id( $product ) {
 
+			$ids = $this->get_secondary_image_ids( $product );
+
+			return $ids ? absint( reset( $ids ) ) : 0;
+		}
+
+		/**
+		 * Every image to reveal on hover, in display order.
+		 *
+		 * In `single` mode this is the dedicated secondary image, or one gallery
+		 * image as a fallback. The rotating and sliding modes return the gallery.
+		 *
+		 * @since 1.1.0
+		 * @param WC_Product $product
+		 * @return array Attachment IDs.
+		 */
+		public function get_secondary_image_ids( $product ) {
+
 			if ( ! $product instanceof WC_Product ) {
-				return 0;
+				return array();
 			}
 
-			$secondary_img_id = get_post_meta( $product->get_id(), self::META_KEY, true );
+			$mode      = $this->option( 'mode' );
+			$gallery   = $this->get_gallery_img_ids( $product );
+			$secondary = absint( get_post_meta( $product->get_id(), self::META_KEY, true ) );
 
-			if ( ! empty( $secondary_img_id ) ) {
-				return absint( $secondary_img_id );
+			$ids = array();
+
+			if ( $secondary ) {
+				$ids[] = $secondary;
 			}
 
-			$image_ids = $this->get_gallery_img_ids( $product );
+			if ( 'single' === $mode ) {
 
-			if ( ! empty( $image_ids ) ) {
-				return absint( apply_filters( 'wpzoom_wc_spi_reveal_last_img', false ) ? end( $image_ids ) : reset( $image_ids ) );
+				$fallback = $this->option( 'fallback' );
+
+				/**
+				 * Kept for back-compatibility: overrides the fallback setting.
+				 *
+				 * @param bool $use_last Whether to reveal the last gallery image.
+				 */
+				$use_last = apply_filters( 'wpzoom_wc_spi_reveal_last_img', 'last' === $fallback );
+
+				if ( ! $ids && $gallery && 'none' !== $fallback ) {
+					$ids[] = absint( $use_last ? end( $gallery ) : reset( $gallery ) );
+				}
+
+			} else {
+
+				foreach ( $gallery as $gallery_id ) {
+					$ids[] = absint( $gallery_id );
+				}
 			}
 
-			return 0;
+			// Never repeat the image the shopper is already looking at.
+			$featured = method_exists( $product, 'get_image_id' ) ? absint( $product->get_image_id() ) : 0;
+
+			$ids = array_filter(
+				array_unique( $ids ),
+				function( $id ) use ( $featured ) {
+					return $id && $id !== $featured;
+				}
+			);
+
+			$max = 'single' === $mode ? 1 : max( 1, (int) $this->option( 'max_images' ) );
+			$ids = array_slice( array_values( $ids ), 0, $max );
+
+			/**
+			 * Filters the images revealed on hover.
+			 *
+			 * @since 1.1.0
+			 * @param array      $ids     Attachment IDs.
+			 * @param WC_Product $product
+			 */
+			return apply_filters( 'wpzoom_wc_spi_image_ids', $ids, $product );
 		}
 
 		/**
