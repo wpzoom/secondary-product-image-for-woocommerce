@@ -19,11 +19,16 @@
 		top: 0;
 		left: 0;
 		right: 0;
-		z-index: 1;
 		line-height: 0;
 		/* Let clicks fall through to the product link underneath. */
 		pointer-events: none;
 	}
+
+	/*
+	 * No z-index on purpose. The container paints above the product image simply
+	 * by coming later in the DOM, while sale badges and similar overlays, which
+	 * carry their own positive z-index, stay on top of it.
+	 */
 
 	/* Unless the image carries its own link, as it does on some block themes. */
 	.wpzoom-secondary-image-container:has(> a) {
@@ -38,14 +43,20 @@
 		display: block;
 	}
 
+	/*
+	 * The container is measured against the primary image by the script, so the
+	 * overlay fills it exactly instead of falling back to its natural ratio,
+	 * which would spill over the title and price on themes that crop thumbnails.
+	 */
 	.wpzoom-wc-spi-secondary-img,
 	.wpzoom-wc-spi-secondary-img.lazyloaded {
 		display: block;
 		width: 100%;
 		max-width: 100%;
-		height: auto;
+		height: 100%;
 		margin: 0;
 		padding: 0;
+		object-fit: cover;
 		opacity: 0;
 		visibility: hidden;
 		transition: opacity 0.45s cubic-bezier(0.23, 1, 0.32, 1), visibility 0.45s;

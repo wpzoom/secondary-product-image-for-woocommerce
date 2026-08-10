@@ -35,7 +35,6 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Frontend' ) ) {
 			if ( ! is_admin() ) {
 
 				add_action( 'wp_enqueue_scripts', array( $this, 'load_frontend_scripts' ), 99 );
-				add_action( 'wp_head', array( $this, 'noscript_fallback' ), 99 );
 				add_action( 'woocommerce_before_shop_loop_item_title', array( $this, 'output_secondary_product_thumbnail' ), 15 );
 				add_filter( 'post_class', array( $this, 'set_product_post_class' ), 21, 3 );
 
@@ -93,20 +92,6 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Frontend' ) ) {
 				WPZOOM_WC_SPI_VER,
 				true
 			);
-		}
-
-		/**
-		 * Keep the hover effect working when JavaScript is unavailable.
-		 *
-		 * @since 1.0.3
-		 */
-		public function noscript_fallback() {
-
-			if ( ! $this->is_enabled() ) {
-				return;
-			}
-
-			echo '<noscript><style>@media (hover: hover) and (pointer: fine){.wpzoom-secondary-image-container{display:block}}</style></noscript>' . "\n";
 		}
 
 		public function output_secondary_product_thumbnail() {
