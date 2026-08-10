@@ -60,7 +60,7 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Metabox' ) ) {
 			if ( null === $this->label || null === $this->id ) {
 
 				if ( WP_DEBUG ) {
-					trigger_error( sprintf( __( "The 'label' and 'id' values of the 'args' parameter of '%s::%s()' are required", 'woocommerce-secondary-product-image' ), __CLASS__, __FUNCTION__ ) );
+					trigger_error( sprintf( __( "The 'label' and 'id' values of the 'args' parameter of '%s::%s()' are required", 'secondary-product-image-for-woocommerce' ), __CLASS__, __FUNCTION__ ) );
 				}
 
 				return;
@@ -154,7 +154,7 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Metabox' ) ) {
 
 			$ajax_nonce = wp_create_nonce( "set_post_thumbnail-{$this->post_type}-{$this->id}-{$calling_post_id}" );
 			
-			$link = sprintf( '<a id="%4$s-%1$s-thumbnail-%2$s" class="%1$s-thumbnail" href="#" onclick="WpzoomWcSecondaryImage.setAsThumbnail(\'%2$s\', \'%1$s\', \'%4$s\', \'%5$s\');return false;">' . __( 'Set as %3$s', 'woocommerce-secondary-product-image' ) . '</a>', $this->id, $post->ID, $this->label, $this->post_type, $ajax_nonce);
+			$link = sprintf( '<a id="%4$s-%1$s-thumbnail-%2$s" class="%1$s-thumbnail" href="#" onclick="WpzoomWcSecondaryImage.setAsThumbnail(\'%2$s\', \'%1$s\', \'%4$s\', \'%5$s\');return false;">' . __( 'Set as %3$s', 'secondary-product-image-for-woocommerce' ) . '</a>', $this->id, $post->ID, $this->label, $this->post_type, $ajax_nonce);
 
 			$form_fields["{$this->post_type}-{$this->id}-thumbnail"] = array(
 				'label' => $this->label,
