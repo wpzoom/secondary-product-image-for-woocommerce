@@ -62,9 +62,10 @@ if ( ! class_exists( 'WPZOOM_WC_SPI_Settings' ) ) {
 				'mode'       => 'single',
 				'interval'   => 1200,
 				'max_images' => 5,
-				'fallback'   => 'first',
-				'lightbox'   => 'no',
-				'touch'      => 'no',
+				'fallback'          => 'first',
+				'lightbox'          => 'no',
+				'lightbox_position' => 'center',
+				'touch'             => 'no',
 			);
 		}
 
@@ -237,6 +238,22 @@ if ( ! class_exists( 'WPZOOM_WC_SPI_Settings' ) ) {
 					'type'    => 'checkbox',
 					'default' => $defaults['lightbox'],
 					'desc'    => esc_html__( 'Add a button that opens the images in a lightbox', 'secondary-product-image-for-woocommerce' ),
+				),
+
+				array(
+					'title'    => esc_html__( 'Lightbox button position', 'secondary-product-image-for-woocommerce' ),
+					'id'       => self::PREFIX . 'lightbox_position',
+					'type'     => 'select',
+					'class'    => 'wc-enhanced-select',
+					'default'  => $defaults['lightbox_position'],
+					'desc_tip' => esc_html__( 'Where the button sits on the product image. Move it off the corners if your theme shows a sale badge there.', 'secondary-product-image-for-woocommerce' ),
+					'options'  => array(
+						'center'       => esc_html__( 'Centre', 'secondary-product-image-for-woocommerce' ),
+						'top-left'     => esc_html__( 'Top left', 'secondary-product-image-for-woocommerce' ),
+						'top-right'    => esc_html__( 'Top right', 'secondary-product-image-for-woocommerce' ),
+						'bottom-left'  => esc_html__( 'Bottom left', 'secondary-product-image-for-woocommerce' ),
+						'bottom-right' => esc_html__( 'Bottom right', 'secondary-product-image-for-woocommerce' ),
+					),
 				),
 
 				array(

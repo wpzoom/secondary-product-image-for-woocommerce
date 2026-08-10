@@ -118,9 +118,8 @@
 	transform: translateY(-50%);
 	border: 0;
 	border-radius: 50%;
-	background: rgba(255, 255, 255, 0.9);
+	background: var(--wpzoom-wc-spi-control-background, rgba(255, 255, 255, 0.92));
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-	color: #111;
 	cursor: pointer;
 	opacity: 0;
 	visibility: hidden;
@@ -141,6 +140,15 @@
 	opacity: 1;
 	visibility: visible;
 	transition: opacity 0.2s ease, visibility 0s linear;
+}
+
+/*
+ * Themes style their buttons with an accent colour, which on a white circle can
+ * fall below the 3:1 contrast an icon needs. Set --wpzoom-wc-spi-control-color
+ * to recolour these deliberately.
+ */
+.wpzoom-wc-spi-controls .wpzoom-wc-spi-nav {
+	color: var(--wpzoom-wc-spi-control-color, #111) !important;
 }
 
 .wpzoom-wc-spi-nav:focus-visible {
@@ -175,12 +183,49 @@
 	transform: translate(-70%, -50%) rotate(45deg);
 }
 
-/* Bottom right, out of the way of sale badges, which sit at the top. */
+/* Position comes from the modifier class below. */
 .wpzoom-wc-spi-expand {
 	top: auto;
+	right: auto;
+	transform: none;
+}
+
+.wpzoom-wc-spi-expand-center {
+	top: 50%;
+	left: 50%;
+	width: 40px;
+	height: 40px;
+	transform: translate(-50%, -50%);
+}
+
+/* Slightly larger glass to match the bigger centred button. */
+.wpzoom-wc-spi-expand-center::before {
+	width: 13px;
+	height: 13px;
+}
+
+.wpzoom-wc-spi-expand-center::after {
+	width: 7px;
+}
+
+.wpzoom-wc-spi-expand-top-left {
+	top: 8px;
+	left: 8px;
+}
+
+.wpzoom-wc-spi-expand-top-right {
+	top: 8px;
+	right: 8px;
+}
+
+.wpzoom-wc-spi-expand-bottom-left {
+	bottom: 8px;
+	left: 8px;
+}
+
+.wpzoom-wc-spi-expand-bottom-right {
 	bottom: 8px;
 	right: 8px;
-	transform: none;
 }
 
 .wpzoom-wc-spi-expand::before {

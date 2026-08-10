@@ -378,7 +378,17 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Frontend' ) ) {
 			}
 
 			if ( 'yes' === $this->option( 'lightbox' ) ) {
-				$controls .= '<button type="button" class="wpzoom-wc-spi-nav wpzoom-wc-spi-expand" data-wpzoom-action="lightbox"></button>';
+				$position = $this->option( 'lightbox_position' );
+				$allowed  = array( 'center', 'top-left', 'top-right', 'bottom-left', 'bottom-right' );
+
+				if ( ! in_array( $position, $allowed, true ) ) {
+					$position = 'center';
+				}
+
+				$controls .= sprintf(
+					'<button type="button" class="wpzoom-wc-spi-nav wpzoom-wc-spi-expand wpzoom-wc-spi-expand-%s" data-wpzoom-action="lightbox"></button>',
+					esc_attr( $position )
+				);
 			}
 
 			if ( $controls ) {

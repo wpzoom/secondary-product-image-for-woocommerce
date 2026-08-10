@@ -24,12 +24,17 @@ Secondary Product Image for WooCommerce adds a hover effect that will reveal a s
 
 * Allows to upload a secondary Featured Image for WooCommerce products
 * Uses the first image from product gallery as fallback if there's no second Featured Image
+* Fade, slide and zoom transitions, with a speed you control
+* Rotate through the whole product gallery on hover, or add previous / next arrows
+* Optional lightbox for a closer look, without leaving the shop page
 * Works with Classic & Block Themes, including the Product Collection block
 * Works with 99% themes
 * Compatible with WooCommerce High-Performance Order Storage (HPOS)
 * Supports Lazy Loading Images
 * The secondary image is loaded only when hovering a product so it doens't affect the loading speed of pages
 * Skipped on touch devices, so it never gets in the way of tapping a product
+
+All options live under WooCommerce > Settings > Products > Secondary Image.
 
 == Recommended Themes & DEMO ==
 
@@ -61,6 +66,16 @@ This section describes how to install the plugin and get it working.
 
 
 == Changelog ==
+
+= 1.1.0 =
+* New settings screen under WooCommerce > Settings > Products > Secondary Image
+* New transition effects: fade, slide and zoom, with a configurable speed
+* New hover mode that rotates through all gallery images automatically
+* New hover mode with previous / next arrows
+* New optional lightbox, opened from a button on the product image, which you can place in the centre or in any corner
+* Gallery images are only downloaded once a product is hovered, so shop pages stay fast
+* You can now choose whether the fallback is the first or the last gallery image, or nothing at all
+* Optionally enable the effect on touch devices
 
 = 1.0.3 =
 * Declared compatibility with WooCommerce High-Performance Order Storage (HPOS)
