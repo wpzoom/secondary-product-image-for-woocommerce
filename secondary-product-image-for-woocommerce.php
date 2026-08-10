@@ -3,15 +3,19 @@
  * Plugin Name:       Secondary Product Image for WooCommerce
  * Plugin URI:        https://www.wpzoom.com/plugins/
  * Description:       Secondary Product Image for WooCommerce adds a hover effect that will reveal a secondary product thumbnail to product images on your WooCommerce product listings.
- * Version:           1.0.2
+ * Version:           1.0.3
  * Requires at least: 6.5
  * Requires PHP:      7.4
+ * Requires Plugins:  woocommerce
  * Author:            WPZOOM
  * Author URI:        https://www.wpzoom.com/
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       secondary-product-image-for-woocommerce
  * Domain Path:       /languages
+ *
+ * WC requires at least: 8.0
+ * WC tested up to:      11.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -78,8 +82,31 @@ class WPZOOM_WC_Secondary_Product_Image {
 		add_action( 'admin_init', array( $this, 'metabox' ) );
 
 		add_action( 'init', array( $this, 'i18n' ) );
+		add_action( 'before_woocommerce_init', array( $this, 'declare_woocommerce_compatibility' ) );
 		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ) );
 		add_action( 'plugins_loaded', array( $this, 'frontend' ) );
+
+	}
+
+	/**
+	 * Declare compatibility with WooCommerce features.
+	 *
+	 * The plugin only stores an attachment ID in post meta and never touches order
+	 * data, so it is fully compatible with High-Performance Order Storage (HPOS).
+	 *
+	 * Fired by `before_woocommerce_init` action hook.
+	 *
+	 * @since 1.0.3
+	 * @access public
+	 */
+	public function declare_woocommerce_compatibility() {
+
+		if ( ! class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			return;
+		}
+
+		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', WPZOOM_WC_SPI__FILE__, true );
+		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', WPZOOM_WC_SPI__FILE__, true );
 
 	}
 
@@ -187,7 +214,11 @@ class WPZOOM_WC_Secondary_Product_Image {
 			esc_html( $button_text )
 		);
 
-		printf( '<div class="notice notice-warning is-dismissible"><p>%1$s</p> <p>%2$s</p></div>', $message, $button );
+		printf(
+			'<div class="notice notice-warning is-dismissible"><p>%1$s</p> <p>%2$s</p></div>',
+			wp_kses_post( $message ),
+			wp_kses_post( $button )
+		);
 
 	}
 

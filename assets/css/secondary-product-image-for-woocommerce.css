@@ -1,36 +1,72 @@
-/* Initially hide the .wpzoom-secondary-image-container */
+/**
+ * Secondary Product Image for WooCommerce
+ *
+ * The container stays hidden until the script confirms a hover-capable pointer,
+ * so touch devices never download the extra image.
+ */
 .wpzoom-secondary-image-container {
 	display: none;
 }
-/* Add a class for displaying with animation */
-.show-secondary-image {
-	display: block;
-	transition: display 0.85s;
-	transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
-}
-.wpzoom-wc-spi-has-enabled {
-	position: relative;
-}
-.wpzoom-wc-spi-secondary-img {
-	position:absolute;
-	width: auto;
-	height: auto !important;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	opacity: 0;
-	transition: opacity 0.85s, visibility 0.85s, -webkit-transform 0.85s;
-	transition: opacity 0.85s, transform 0.85s, visibility 0.85s;
-	transition: opacity 0.85s, transform 0.85s, visibility 0.85s, -webkit-transform 0.85s;
-	transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
-}
-.wpzoom-wc-spi-secondary-img.lazyloaded {
-	opacity:0;
+
+@media (hover: hover) and (pointer: fine) {
+
+	.wpzoom-wc-spi-has-enabled {
+		position: relative;
+	}
+
+	.wpzoom-secondary-image-container {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 1;
+		line-height: 0;
+		/* Let clicks fall through to the product link underneath. */
+		pointer-events: none;
+	}
+
+	/* Unless the image carries its own link, as it does on some block themes. */
+	.wpzoom-secondary-image-container:has(> a) {
+		pointer-events: auto;
+	}
+
+	.wpzoom-secondary-image-container a {
+		display: block;
+	}
+
+	.wpzoom-wc-spi-ready .wpzoom-secondary-image-container {
+		display: block;
+	}
+
+	.wpzoom-wc-spi-secondary-img,
+	.wpzoom-wc-spi-secondary-img.lazyloaded {
+		display: block;
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+		margin: 0;
+		padding: 0;
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity 0.45s cubic-bezier(0.23, 1, 0.32, 1), visibility 0.45s;
+	}
+
+	/*
+	 * `!important` is deliberate: several themes fade product images on hover
+	 * (`.product:hover img { opacity: .5 }`) and would otherwise wash out the
+	 * secondary image too.
+	 */
+	.wpzoom-wc-spi-has-enabled:hover .wpzoom-wc-spi-secondary-img,
+	.wpzoom-wc-spi-has-enabled:focus-within .wpzoom-wc-spi-secondary-img,
+	.wpzoom-wc-spi-block-image:hover .wpzoom-wc-spi-secondary-img,
+	.wpzoom-wc-spi-block-image:focus-within .wpzoom-wc-spi-secondary-img {
+		opacity: 1 !important;
+		visibility: visible;
+	}
 }
 
-.woocommerce .products .product:hover .wpzoom-wc-spi-secondary-img,
-.woocommerce .products-block-post-template .product:hover .wpzoom-wc-spi-secondary-img {
-    opacity: 1;
-    visibility: visible;
+@media (prefers-reduced-motion: reduce) {
+	.wpzoom-wc-spi-secondary-img {
+		transition-duration: 0.01ms;
+	}
 }

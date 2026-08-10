@@ -1,20 +1,24 @@
-// Access the product list
-var productList = document.querySelector('.products');
+/**
+ * Secondary Product Image for WooCommerce
+ *
+ * Flags the page as hover-capable so the CSS can reveal the secondary images.
+ * Everything else is handled in CSS, which keeps the effect working with any
+ * theme markup and with product grids loaded over AJAX.
+ */
+( function () {
+	'use strict';
 
-if( ! productList ) {
-	productList = document.querySelector('.products-block-post-template'); 
-}
+	if ( ! window.matchMedia || ! window.matchMedia( '(hover: hover) and (pointer: fine)' ).matches ) {
+		return;
+	}
 
-// Attach mouseover and mouseout event listeners to each product item
-if ( productList ) {
-	productList.addEventListener( 'mouseover', function (event) {
-		
-		var target = event.target;
-		var parent = target.parentNode;		
-		var secondaryWrapper = parent.querySelector('.wpzoom-secondary-image-container');
-	
-		// Add the class to show the .wpzoom-secondary-image-container with animation
-		if ( secondaryWrapper ) secondaryWrapper.classList.add('show-secondary-image');
-		
-	});
-}
+	// Waiting for the first pointer movement keeps the images out of the initial
+	// page load, and gives them time to decode before the first product is hovered.
+	document.addEventListener(
+		'pointerover',
+		function () {
+			document.documentElement.classList.add( 'wpzoom-wc-spi-ready' );
+		},
+		{ once: true, passive: true }
+	);
+} )();

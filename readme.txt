@@ -4,8 +4,9 @@ Donate link:        http://paypal.me/wpzm/10usd
 Author URI:         https://www.wpzoom.com/
 Requires at least:  6.5
 Tested up to:       7.1
-Stable tag:         1.0.2
+Stable tag:         1.0.3
 Requires PHP:       7.4
+Requires Plugins:   woocommerce
 License:            GPLv2 or later
 License URI:        https://www.gnu.org/licenses/gpl-2.0.html
 Tags:               woocommerce, product image, hover, flip, shop
@@ -23,10 +24,12 @@ Secondary Product Image for WooCommerce adds a hover effect that will reveal a s
 
 * Allows to upload a secondary Featured Image for WooCommerce products
 * Uses the first image from product gallery as fallback if there's no second Featured Image
-* Works with Classic & Block Themes
+* Works with Classic & Block Themes, including the Product Collection block
 * Works with 99% themes
+* Compatible with WooCommerce High-Performance Order Storage (HPOS)
 * Supports Lazy Loading Images
 * The secondary image is loaded only when hovering a product so it doens't affect the loading speed of pages
+* Skipped on touch devices, so it never gets in the way of tapping a product
 
 == Recommended Themes & DEMO ==
 
@@ -58,6 +61,15 @@ This section describes how to install the plugin and get it working.
 
 
 == Changelog ==
+
+= 1.0.3 =
+* Declared compatibility with WooCommerce High-Performance Order Storage (HPOS)
+* Added support for the Product Collection and Products blocks
+* Fixed the hover effect requiring the product title to be hovered first on some themes, including Divi
+* Fixed the secondary image appearing faded on themes that dim product images on hover
+* The effect now follows the device's pointer instead of user agent detection, so it no longer breaks on cached pages
+* The secondary image is now revealed for keyboard users and respects reduced motion preferences
+* Fixed stale image data being left behind when an attachment was deleted from the Media Library
 
 = 1.0.2 =
 * Fixed an issue with the secondary image preloading
