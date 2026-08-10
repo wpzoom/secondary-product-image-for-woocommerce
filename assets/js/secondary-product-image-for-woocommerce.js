@@ -16,67 +16,83 @@
 	var CONTAINER = '.wpzoom-secondary-image-container';
 	var ITEM = '.wpzoom-wc-spi-has-enabled';
 
-	function measure( item, container, primary ) {
-		var box = primary.getBoundingClientRect();
+	var measurers = new WeakMap();
+	var ready = false;
+	var hovered = null;
 
-		if ( ! box.width || ! box.height ) {
-			return;
-		}
-
-		var itemBox = item.getBoundingClientRect();
-
-		// Offsets are relative to the item's padding box, which is what an
-		// absolutely positioned child is placed against.
-		container.style.top = ( box.top - itemBox.top - item.clientTop ) + 'px';
-		container.style.left = ( box.left - itemBox.left - item.clientLeft ) + 'px';
-		container.style.width = box.width + 'px';
-		container.style.height = box.height + 'px';
-
-		var secondary = container.querySelector( 'img' );
-
-		if ( secondary ) {
-			var primaryStyle = window.getComputedStyle( primary );
-
-			// `fill` would stretch an image whose ratio differs from the primary.
-			secondary.style.objectFit = 'fill' === primaryStyle.objectFit ? 'cover' : primaryStyle.objectFit;
-			secondary.style.objectPosition = primaryStyle.objectPosition;
-		}
-	}
-
-	function sync( item ) {
-		if ( ! item || item.dataset.wpzoomWcSpi ) {
-			return;
-		}
-
+	function measurer( item ) {
 		var container = item.querySelector( CONTAINER );
 		var primary = item.querySelector( 'img:not(.wpzoom-wc-spi-secondary-img)' );
 
 		if ( ! container || ! primary ) {
+			return null;
+		}
+
+		return function () {
+			var box = primary.getBoundingClientRect();
+
+			if ( ! box.width || ! box.height ) {
+				return;
+			}
+
+			var itemBox = item.getBoundingClientRect();
+
+			// Offsets are relative to the item's padding box, which is what an
+			// absolutely positioned child is placed against.
+			container.style.top = ( box.top - itemBox.top - item.clientTop ) + 'px';
+			container.style.left = ( box.left - itemBox.left - item.clientLeft ) + 'px';
+			container.style.width = box.width + 'px';
+			container.style.height = box.height + 'px';
+
+			var secondary = container.querySelector( 'img' );
+
+			if ( secondary ) {
+				var primaryStyle = window.getComputedStyle( primary );
+
+				// `fill` would stretch an image whose ratio differs from the primary.
+				secondary.style.objectFit = 'fill' === primaryStyle.objectFit ? 'cover' : primaryStyle.objectFit;
+				secondary.style.objectPosition = primaryStyle.objectPosition;
+			}
+		};
+	}
+
+	/**
+	 * Measure an item, setting it up on first sight.
+	 *
+	 * Measuring again on every hover is what keeps the overlay correct after a
+	 * viewport change, a late web font, or a grid rebuilt by AJAX filters.
+	 */
+	function measure( item ) {
+		if ( ! item ) {
 			return;
 		}
 
-		item.dataset.wpzoomWcSpi = '1';
+		var apply = measurers.get( item );
 
-		var apply = function () {
-			measure( item, container, primary );
-		};
+		if ( ! apply ) {
+			apply = measurer( item );
+
+			if ( ! apply ) {
+				return;
+			}
+
+			measurers.set( item, apply );
+
+			// Handles reflows that happen while the product is already hovered.
+			if ( window.ResizeObserver ) {
+				var observer = new ResizeObserver( apply );
+				observer.observe( item );
+			}
+
+			// A lazy-loaded product image has no box to measure yet.
+			var primary = item.querySelector( 'img:not(.wpzoom-wc-spi-secondary-img)' );
+
+			if ( primary && ! primary.complete ) {
+				primary.addEventListener( 'load', apply, { once: true } );
+			}
+		}
 
 		apply();
-
-		// Keeps the overlay aligned through responsive reflows and lazy loading.
-		if ( window.ResizeObserver ) {
-			var observer = new ResizeObserver( apply );
-			observer.observe( primary );
-			observer.observe( item );
-		}
-
-		if ( ! primary.complete ) {
-			primary.addEventListener( 'load', apply, { once: true } );
-		}
-	}
-
-	function syncAll() {
-		document.querySelectorAll( ITEM ).forEach( sync );
 	}
 
 	// Waiting for the first pointer movement keeps the images out of the initial
@@ -84,15 +100,26 @@
 	document.addEventListener(
 		'pointerover',
 		function ( event ) {
-			if ( ! document.documentElement.classList.contains( 'wpzoom-wc-spi-ready' ) ) {
+			if ( ! ready ) {
+				ready = true;
 				document.documentElement.classList.add( 'wpzoom-wc-spi-ready' );
-				syncAll();
+				document.querySelectorAll( ITEM ).forEach( measure );
+			}
+
+			if ( ! event.target.closest ) {
 				return;
 			}
 
-			// Products added after load, e.g. by AJAX filters or infinite scroll.
-			if ( event.target.closest ) {
-				sync( event.target.closest( ITEM ) );
+			var item = event.target.closest( ITEM );
+
+			// pointerover repeats for every child, so only act on a new product.
+			// Tracking null too means leaving the grid and coming back re-measures.
+			if ( item !== hovered ) {
+				hovered = item;
+
+				if ( item ) {
+					measure( item );
+				}
 			}
 		},
 		{ passive: true }

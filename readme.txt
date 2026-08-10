@@ -66,6 +66,8 @@ This section describes how to install the plugin and get it working.
 * Declared compatibility with WooCommerce High-Performance Order Storage (HPOS)
 * Added support for the Product Collection and Products blocks
 * Fixed the hover effect requiring the product title to be hovered first on some themes, including Divi
+* Fixed the secondary image overflowing the product image on themes that crop thumbnails to their own ratio, such as Blocksy
+* Sale badges and similar overlays now stay above the secondary image
 * Fixed the secondary image appearing faded on themes that dim product images on hover
 * The effect now follows the device's pointer instead of user agent detection, so it no longer breaks on cached pages
 * The secondary image is now revealed for keyboard users and respects reduced motion preferences
