@@ -127,6 +127,37 @@ if ( ! class_exists( 'WPZOOM_WC_SPI_Settings' ) ) {
 		}
 
 		/**
+		 * The help text shown in the product metabox.
+		 *
+		 * What actually happens to a product without its own secondary image depends
+		 * on the current settings, so the wording follows them instead of implying
+		 * that setting one is required.
+		 *
+		 * @since 1.1.0
+		 * @return string
+		 */
+		public static function metabox_description() {
+
+			$mode = self::get( 'mode' );
+
+			if ( 'single' !== $mode ) {
+				return esc_html__( 'Optional. The gallery images of this product are already shown on hover; pick an image here to show it first.', 'secondary-product-image-for-woocommerce' );
+			}
+
+			$fallback = self::get( 'fallback' );
+
+			if ( 'none' === $fallback ) {
+				return esc_html__( 'Pick the image that appears when someone hovers this product in your shop. Without one, this product has no hover image.', 'secondary-product-image-for-woocommerce' );
+			}
+
+			if ( 'last' === $fallback ) {
+				return esc_html__( 'Optional. Without one, the last product gallery image is shown on hover.', 'secondary-product-image-for-woocommerce' );
+			}
+
+			return esc_html__( 'Optional. Without one, the first product gallery image is shown on hover.', 'secondary-product-image-for-woocommerce' );
+		}
+
+		/**
 		 * Clear the runtime cache after the options are saved.
 		 */
 		public static function flush_cache() {

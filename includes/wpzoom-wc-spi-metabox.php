@@ -481,10 +481,21 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Metabox' ) ) {
 	
 	if( class_exists( 'WooCommerce' ) ) {
 
+		$description = class_exists( 'WPZOOM_WC_SPI_Settings' )
+			? WPZOOM_WC_SPI_Settings::metabox_description()
+			: esc_html__( 'Optional. Without one, the first product gallery image is shown on hover.', 'secondary-product-image-for-woocommerce' );
+
+		// Link through to where the hover behaviour itself is configured.
+		$description .= sprintf(
+			' <a href="%1$s">%2$s</a>',
+			esc_url( admin_url( 'admin.php?page=wc-settings&tab=products&section=wpzoom-secondary-image' ) ),
+			esc_html__( 'Hover settings', 'secondary-product-image-for-woocommerce' )
+		);
+
 		new WPZOOM_WC_Secondary_Image_Metabox(
 			array(
 				'label'     => esc_html__( 'Secondary Product Image', 'secondary-product-image-for-woocommerce' ),
-				'desc'      => esc_html__( 'Add a second Featured Image, which will appear when hovering over the product image.', 'secondary-product-image-for-woocommerce' ),
+				'desc'      => $description,
 				'id'        => 'wpzoom-product-secondary-image',
 				'post_type' => 'product',
 			)
