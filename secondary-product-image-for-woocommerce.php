@@ -3,7 +3,7 @@
  * Plugin Name:       Secondary Product Image for WooCommerce
  * Plugin URI:        https://www.wpzoom.com/plugins/
  * Description:       Secondary Product Image for WooCommerce adds a hover effect that will reveal a secondary product thumbnail to product images on your WooCommerce product listings.
- * Version:           1.1.0
+ * Version:           1.1.1
  * Requires at least: 6.5
  * Requires PHP:      7.4
  * Requires Plugins:  woocommerce

@@ -4,7 +4,7 @@ Donate link:        http://paypal.me/wpzm/10usd
 Author URI:         https://www.wpzoom.com/
 Requires at least:  6.5
 Tested up to:       7.1
-Stable tag:         1.1.0
+Stable tag:         1.1.1
 Requires PHP:       7.4
 Requires Plugins:   woocommerce
 License:            GPLv2 or later
@@ -141,6 +141,9 @@ Use the support forum here, or open an issue on the [GitHub repository](https://
 
 == Changelog ==
 
+= 1.1.1 =
+* Fixed related products on single product pages showing all their secondary images at once, and one of them spilling over the page, when hovering anywhere on the page
+
 = 1.1.0 =
 * New settings screen under WooCommerce > Settings > Products > Secondary Image
 * New live preview on the settings screen, so you can try every option before saving
@@ -173,6 +176,9 @@ Use the support forum here, or open an issue on the [GitHub repository](https://
 * Initial plugin release
 
 == Upgrade Notice ==
+
+= 1.1.1 =
+Fixes the hover effect on related products on single product pages.
 
 = 1.1.0 =
 Adds a settings screen with a live preview, three transition effects, gallery rotation, hover arrows and an optional lightbox. Your shop keeps behaving exactly as before until you change a setting.
