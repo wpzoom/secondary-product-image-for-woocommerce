@@ -32,7 +32,12 @@
 
 	function setup( item ) {
 
-		var container = item.querySelector( CONTAINER );
+		// Only an overlay that belongs to this product: a wrapper around a whole grid (a
+		// theme or another plugin adding the class to it) must not take the first
+		// product's overlay and size it to an image elsewhere on the page.
+		var container = Array.prototype.filter.call( item.querySelectorAll( CONTAINER ), function ( element ) {
+			return element.parentElement.closest( ITEM ) === item;
+		} )[ 0 ];
 		var primary = item.querySelector( 'img:not(.wpzoom-wc-spi-secondary-img)' );
 
 		if ( ! container || ! primary ) {

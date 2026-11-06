@@ -519,6 +519,13 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Frontend' ) ) {
 				return $classes;
 			}
 
+			// The product a single product page is about has no overlay of its own. Tagging its
+			// wrapper would make hovering anywhere on the page reveal the related products'
+			// images, and the script would treat the whole page as one product.
+			if ( is_singular( 'product' ) && (int) $post_id === get_queried_object_id() && '' === (string) wc_get_loop_prop( 'name' ) ) {
+				return $classes;
+			}
+
 			// Resolve the product from the post being rendered instead of the global,
 			// which can point at a different product inside nested loops.
 			$product = wc_get_product( $post_id );
