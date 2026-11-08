@@ -4,7 +4,7 @@ Donate link:        http://paypal.me/wpzm/10usd
 Author URI:         https://www.wpzoom.com/
 Requires at least:  6.5
 Tested up to:       7.1
-Stable tag:         1.1.1
+Stable tag:         1.1.2
 Requires PHP:       7.4
 Requires Plugins:   woocommerce
 License:            GPLv2 or later
@@ -141,6 +141,9 @@ Use the support forum here, or open an issue on the [GitHub repository](https://
 
 == Changelog ==
 
+= 1.1.2 =
+* Fixed the messages shown while setting a secondary image in the product editor not being translatable
+
 = 1.1.1 =
 * Fixed related products on single product pages showing all their secondary images at once, and one of them spilling over the page, when hovering anywhere on the page
 
@@ -176,6 +179,9 @@ Use the support forum here, or open an issue on the [GitHub repository](https://
 * Initial plugin release
 
 == Upgrade Notice ==
+
+= 1.1.2 =
+Makes the messages in the product editor's secondary image box translatable.
 
 = 1.1.1 =
 Fixes the hover effect on related products on single product pages.
