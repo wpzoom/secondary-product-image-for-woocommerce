@@ -195,6 +195,7 @@ if ( ! class_exists( 'WPZOOM_WC_Secondary_Image_Metabox' ) ) {
 				wp_enqueue_media( array( 'post' => ( $post_ID ? $post_ID : null ) ) );
 				// Both stay in the header: the metabox markup bootstraps MediaModal inline.
 				wp_enqueue_script( "wpzoom-wc-spi-metabox", $this->plugins_url( 'assets/js/wpzoom-wc-spi-metabox.js', __FILE__ ), array( 'jquery', 'wp-i18n', 'set-post-thumbnail' ), WPZOOM_WC_SPI_VER, false );
+				wp_set_script_translations( "wpzoom-wc-spi-metabox", 'secondary-product-image-for-woocommerce', WPZOOM_WC_SPI_PATH . 'languages' );
 				wp_enqueue_script( "wpzoom-wc-spi-metabox-modal", $this->plugins_url( 'assets/js/media-modal.js', __FILE__ ), array( 'jquery', 'media-models' ), WPZOOM_WC_SPI_VER, false );
 			}
 

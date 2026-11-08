@@ -1,10 +1,10 @@
 window.WpzoomWcSecondaryImage = {
 
     l10n: ( window.wp && window.wp.i18n ) ? {
-	    setThumbnail: wp.i18n.__( 'Set featured image' ),
-	    saving: wp.i18n.__( 'Saving...' ),
-	    error: wp.i18n.__( 'Could not set that as the thumbnail image. Try a different attachment.' ),
-	    done: wp.i18n.__( 'Done' )
+	    setThumbnail: wp.i18n.__( 'Set featured image', 'secondary-product-image-for-woocommerce' ),
+	    saving: wp.i18n.__( 'Saving...', 'secondary-product-image-for-woocommerce' ),
+	    error: wp.i18n.__( 'Could not set that as the thumbnail image. Try a different attachment.', 'secondary-product-image-for-woocommerce' ),
+	    done: wp.i18n.__( 'Done', 'secondary-product-image-for-woocommerce' )
     } : { setThumbnail: '', saving: '', error: '', done: '' },
 
     // The media modal runs on the edit screen, the legacy uploader popup does not.

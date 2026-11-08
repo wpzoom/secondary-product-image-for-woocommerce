@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Secondary Product Image for WooCommerce 1.1.0\n"
+"Project-Id-Version: Secondary Product Image for WooCommerce 1.1.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/secondary-product-image-for-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-10T12:28:58+00:00\n"
+"POT-Creation-Date: 2026-11-08T08:25:40+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: secondary-product-image-for-woocommerce\n"
@@ -76,27 +76,27 @@ msgstr ""
 msgid "Set as %3$s"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-metabox.php:405
 #: includes/wpzoom-wc-spi-metabox.php:406
+#: includes/wpzoom-wc-spi-metabox.php:407
 #, php-format
 msgid "Set %s"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-metabox.php:425
+#: includes/wpzoom-wc-spi-metabox.php:426
 #, php-format
 msgid "Remove %s"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-metabox.php:486
+#: includes/wpzoom-wc-spi-metabox.php:487
 #: includes/wpzoom-wc-spi-settings.php:157
 msgid "Optional. Without one, the first product gallery image is shown on hover."
 msgstr ""
 
-#: includes/wpzoom-wc-spi-metabox.php:492
+#: includes/wpzoom-wc-spi-metabox.php:493
 msgid "Hover settings"
 msgstr ""
 
-#: includes/wpzoom-wc-spi-metabox.php:497
+#: includes/wpzoom-wc-spi-metabox.php:498
 #: includes/wpzoom-wc-spi-settings.php:373
 msgid "Secondary Product Image"
 msgstr ""
@@ -289,4 +289,20 @@ msgstr ""
 
 #: secondary-product-image-for-woocommerce.php:235
 msgid "Install WooCommerce"
+msgstr ""
+
+#: includes/assets/js/wpzoom-wc-spi-metabox.js:4
+msgid "Set featured image"
+msgstr ""
+
+#: includes/assets/js/wpzoom-wc-spi-metabox.js:5
+msgid "Saving..."
+msgstr ""
+
+#: includes/assets/js/wpzoom-wc-spi-metabox.js:6
+msgid "Could not set that as the thumbnail image. Try a different attachment."
+msgstr ""
+
+#: includes/assets/js/wpzoom-wc-spi-metabox.js:7
+msgid "Done"
 msgstr ""
